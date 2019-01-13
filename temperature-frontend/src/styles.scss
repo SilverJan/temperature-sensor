@@ -1,0 +1,29 @@
+/* You can add global styles to this file, and also import other style files */
+html, body {
+    height: 100%;
+    font-family: Helvetica, serif;
+  }
+  
+  .no-padding {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  .no-outline {
+    outline: none!important;
+  }
+  
+  .no-margin {
+    margin: 0 !important;
+  }
+  
+  /* Workaround for markdown heading color. Take care if apply <h1> etc. otherwise */
+  h1, h2, h3, h4, h5, h6 {
+    color: #0069B3 !important;
+  }
+  
+  .full-height {
+    height: 100%;
+    min-height: 100%;
+  }
+  

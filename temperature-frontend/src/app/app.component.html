@@ -1,0 +1,40 @@
+<div class="container-fluid full-height" style="padding: 0px;">
+  <div class="container-fluid full-height no-padding">
+    <!-- nav bar -->
+    <nav class="navbar fixed-top navbar-dark bg-dark">
+      <a class="navbar-brand" style="color: #FFF">Temperature & Humidity Measurement Tool</a>
+    </nav>
+    <!-- core -->
+    <div class="col-md" style="top:60px">
+      <div class="row full-height">
+        <div class="col-md-6 full-height">
+          <table class="table table-dark table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Date & Time</th>
+                <th scope="col">Temperature</th>
+                <th scope="col">Humidity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let dataSet of this.data; let i = index">
+                <td>{{dataSet.date | date:'dd/mm/yyyy hh:mm:ss'}}</td>
+                <td>{{dataSet.temperature}} °C</td>
+                <td>{{dataSet.humidity}} %</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-6 full-height">
+          <app-graph [data]="data"></app-graph>
+        </div>
+      </div>
+    </div>
+
+    <!-- footer -->
+    <nav class="navbar fixed-bottom navbar-light bg-dark">
+
+    </nav>
+  </div>
+
+  <router-outlet></router-outlet>
