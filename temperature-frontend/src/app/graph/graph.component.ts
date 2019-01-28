@@ -1,4 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges
+} from '@angular/core';
 import { ISensorData } from '../app.component';
 
 
@@ -7,7 +13,7 @@ import { ISensorData } from '../app.component';
   templateUrl: './graph.component.html',
   styleUrls: ['./graph.component.scss']
 })
-export class GraphComponent implements OnInit {
+export class GraphComponent implements OnInit, OnChanges {
   @Input() data: Array<ISensorData> = [];
   public lineChartData: Array<any> = [];
   public lineChartLabels: Array<any> = [];
@@ -46,17 +52,35 @@ export class GraphComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.applyData()
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.applyData()
+  }
+
+  applyData() {
+    //this.data = this.data.slice(0, 7)
+
+    // the following only works if data is available. Hence, a ngIf is added in app.component.html
+    // alternatively can also hard code the labels
+    this.lineChartLabels = this.data.map(dataSet => {
+      let options = { hour: 'numeric', minute: 'numeric' };
+
+      return dataSet.date.toLocaleDateString("en-US", options).toString()}
+    );
+
     this.lineChartData = [
       {
-        data: this.data.map(dataSet => dataSet.temperature ),
+        data: this.data.map(dataSet => dataSet.temperature),
         label: 'Temperature'
       },
-      { data: this.data.map(dataSet => dataSet.humidity), 
-        label: 'Humidity' 
+      { data: this.data.map(dataSet => dataSet.humidity),
+        label: 'Humidity'
       },
     ];
-    this.lineChartLabels = this.data.map(dataSet => dataSet.date.getHours())
-  }
+
+    }
 
   // events
   public chartClicked(e: any): void {

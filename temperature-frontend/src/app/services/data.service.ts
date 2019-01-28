@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
+import {Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -12,32 +9,10 @@ export class DataService {
   constructor(private http: HttpClient) {
   }
 
-  login(username: string, password: string) {
+  configUrl = 'http://192.168.1.69/logs/temps.json';
 
-    let options = {
-      headers: new HttpHeaders().set('Content-Type', 'application/json')
-    };
-    let body = { "username": username, "password": password };
-    return this.http.post(environment.backendUrl + '/token', body, options)
-      .map(DataService.extractData)
-      .catch(DataService.handleError);
-  }
-
-  getAllElements(): Observable<IElement[]> {
-    if (environment.mock) {
-      return Observable.create((observer) => {
-        let mockData: IElement[] = []
-        observer.next(mockData);
-      });
-    } else {
-      let options = {
-        headers: new HttpHeaders().set('Authorization',
-          `Bearer ${sessionStorage.getItem('session')}`)
-      };
-      return this.http.get(environment.backendUrl + '/element', options)
-        .map(DataService.extractData)
-        .catch(DataService.handleError);
-    }
+  getTemperature() {
+    return this.http.get(this.configUrl);
   }
 
   private static extractData(res: Response) {

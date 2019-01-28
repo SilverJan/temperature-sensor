@@ -7,7 +7,7 @@
     <!-- core -->
     <div class="col-md" style="top:60px">
       <div class="row full-height">
-        <div class="col-md-6 full-height">
+        <div class="col-md-6 full-height" style="overflow-y: scroll; max-height: 500px">
           <table class="table table-dark table-hover">
             <thead>
               <tr>
@@ -18,7 +18,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let dataSet of this.data; let i = index">
-                <td>{{dataSet.date | date:'dd/mm/yyyy hh:mm:ss'}}</td>
+                <td>{{dataSet.date | date:'MM/dd/yyyy hh:mm:ss'}}</td>
                 <td>{{dataSet.temperature}} °C</td>
                 <td>{{dataSet.humidity}} %</td>
               </tr>
@@ -26,7 +26,7 @@
           </table>
         </div>
         <div class="col-md-6 full-height">
-          <app-graph [data]="data"></app-graph>
+          <app-graph *ngIf="data.length != 0" [data]="data"></app-graph>
         </div>
       </div>
     </div>
