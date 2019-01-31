@@ -64,10 +64,11 @@ export class GraphComponent implements OnInit, OnChanges {
 
     // the following only works if data is available. Hence, a ngIf is added in app.component.html
     // alternatively can also hard code the labels
-    this.lineChartLabels = this.data.map(dataSet => {
+    this.lineChartLabels.length = 0;
+    this.data.map(dataSet => {
       let options = { hour: 'numeric', minute: 'numeric' };
 
-      return dataSet.date.toLocaleDateString("en-US", options).toString()}
+      this.lineChartLabels.push(dataSet.date.toLocaleDateString("en-US", options).toString())}
     );
 
     this.lineChartData = [

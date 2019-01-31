@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {DataService} from './services/data.service';
+import {MatDatepickerInputEvent} from '@angular/material';
 
 @Component({
   selector: 'app-root',
@@ -7,9 +8,21 @@ import {DataService} from './services/data.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  data: Array<ISensorData> = [];
+  dataInScope: Array<ISensorData> = [];
+  dataComplete: Array<ISensorData> = [];
 
-  constructor(private dataService: DataService) { }
+
+  // variables for the toggle button
+  color = 'accent';
+  graphOnly = false;
+  disabled = false;
+  dateStart = new Date();
+  dateEnd = new Date();
+
+
+  constructor(private dataService: DataService) {
+    this.dateStart.setDate(this.dateStart.getDate() - 14);
+  }
 
   ngOnInit() {
     // this.data.push(
@@ -41,22 +54,45 @@ export class AppComponent {
   loadConfig() {
     this.dataService.getTemperature()
       .subscribe((data: Array<ISensorData>) => {
-        data.forEach((dataSet:ISensorData) => {
+        data.forEach((dataSet: ISensorData) => {
           // comes as   2019-01-13 14:34:02
           dataSet.date = new Date(dataSet.date);
           dataSet.temperature = parseFloat(String(dataSet.temperature));
           dataSet.humidity = parseFloat(String(dataSet.humidity));
-          this.data.push(dataSet)
+          this.dataComplete.push(dataSet)
         });
-        this.data.sort(function(a,b){
+        this.dataComplete.sort(function (a, b) {
           // Turn your strings into dates, and then subtract them
           // to get a value that is either negative, positive, or zero.
-          // TODO: Investigate further
-          return new Date(b.date) - new Date(a.date);
+          return b.date.valueOf() - a.date.valueOf();
         });
-        this.data = this.data.reverse();
-        this.data = this.data.slice();
+        this.dataComplete = this.dataComplete.reverse();
+        this.updateDataInScope()
       });
+  }
+
+  updateDataInScope() {
+    if (this.dateEnd == null || this.dateStart == null) {
+      this.dataInScope = this.dataComplete;
+    }
+    console.info('Before update: ' + this.dataInScope.length);
+
+    let oneDayInMs = 86400000
+    this.dataInScope = this.dataComplete.filter((dataSet: ISensorData) => {
+      if (dataSet.date.valueOf() >= this.dateStart.valueOf() && dataSet.date.valueOf() <= (this.dateEnd.valueOf() + oneDayInMs)) {
+        return dataSet;
+      } else {
+        console.debug("Not in scope: " + dataSet.date)
+      }
+    });
+    console.info('After update: ' + this.dataInScope.length);
+
+    // Slicing needed to update children components
+    this.dataInScope = this.dataInScope.slice();
+  }
+
+  onDateChange(type: string, event: MatDatepickerInputEvent<Date>) {
+    this.updateDataInScope();
   }
 }
 

@@ -1,32 +1,63 @@
 <div class="container-fluid full-height" style="padding: 0px;">
   <div class="container-fluid full-height no-padding">
     <!-- nav bar -->
-    <nav class="navbar fixed-top navbar-dark bg-dark">
+    <nav class="navbar navbar-dark bg-dark">
       <a class="navbar-brand" style="color: #FFF">Temperature & Humidity Measurement Tool</a>
     </nav>
+    <!-- settings bar -->
+    <nav class="navbar navbar-light" style="background: gray">
+      <form class="form-inline">
+        <mat-slide-toggle
+          class=""
+          [(ngModel)]="graphOnly"
+          [color]="color"
+          [disabled]="disabled"
+          name="graphOnlyForm">
+          Show graph only
+        </mat-slide-toggle>
+        <mat-form-field class="example-full-width" style="padding: 0 10px 0 10px">
+          <input matInput [(ngModel)]="dateStart" [matDatepicker]="pickerStart" placeholder="Choose a start date (incl.)"
+                 name="dateStartForm"
+                 (dateChange)="onDateChange('change', $event)">
+          <mat-datepicker-toggle matSuffix [for]="pickerStart">
+            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+          </mat-datepicker-toggle>
+          <mat-datepicker #pickerStart></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <input matInput [(ngModel)]="dateEnd" [matDatepicker]="pickerEnd" placeholder="Choose an end date (incl.)"
+                 name="dateEndForm"
+                 (dateChange)="onDateChange('change', $event)">
+          <mat-datepicker-toggle matSuffix [for]="pickerEnd">
+            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+          </mat-datepicker-toggle>
+          <mat-datepicker #pickerEnd></mat-datepicker>
+        </mat-form-field>
+      </form>
+    </nav>
     <!-- core -->
-    <div class="col-md" style="top:60px">
+    <div class="col-md" style="">
       <div class="row full-height">
-        <div class="col-md-6 full-height" style="overflow-y: scroll; max-height: 500px">
+        <div class="col-md-6 full-height" *ngIf="!graphOnly" style="overflow-y: scroll; max-height: 500px; top: 20px">
           <table class="table table-dark table-hover">
             <thead>
-              <tr>
-                <th scope="col">Date & Time</th>
-                <th scope="col">Temperature</th>
-                <th scope="col">Humidity</th>
-              </tr>
+            <tr>
+              <th scope="col">Date & Time</th>
+              <th scope="col">Temperature</th>
+              <th scope="col">Humidity</th>
+            </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let dataSet of this.data; let i = index">
-                <td>{{dataSet.date | date:'MM/dd/yyyy hh:mm:ss'}}</td>
-                <td>{{dataSet.temperature}} °C</td>
-                <td>{{dataSet.humidity}} %</td>
-              </tr>
+            <tr *ngFor="let dataSet of this.dataInScope; let i = index">
+              <td>{{dataSet.date | date:'MM/dd/yyyy hh:mm:ss'}}</td>
+              <td>{{dataSet.temperature}} °C</td>
+              <td>{{dataSet.humidity}} %</td>
+            </tr>
             </tbody>
           </table>
         </div>
-        <div class="col-md-6 full-height">
-          <app-graph *ngIf="data.length != 0" [data]="data"></app-graph>
+        <div class="full-height" [ngClass]="{'col-md-6': !graphOnly, 'col-md': graphOnly}">
+          <app-graph *ngIf="dataInScope.length != 0" [data]="dataInScope"></app-graph>
         </div>
       </div>
     </div>
