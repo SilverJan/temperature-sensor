@@ -59,7 +59,9 @@ export class AppComponent {
       .subscribe((data: Array<ISensorData>) => {
         data.forEach((dataSet: ISensorData) => {
           // comes as   2019-01-13 14:34:02
-          dataSet.date = new Date(dataSet.date);
+          // for iOS: replace dash else it cannot be converted
+          // see https://stackoverflow.com/questions/13363673/javascript-date-is-invalid-on-ios
+          dataSet.date = new Date(dataSet.date.toString().replace(/-/g, '/'));
           dataSet.temperature = parseFloat(String(dataSet.temperature));
           dataSet.humidity = parseFloat(String(dataSet.humidity));
           this.dataComplete.push(dataSet)
@@ -80,8 +82,9 @@ export class AppComponent {
     }
     console.info('Before update: ' + this.dataInScope.length);
 
-    let oneDayInMs = 86400000
+    let oneDayInMs = 86400000;
     this.dataInScope = this.dataComplete.filter((dataSet: ISensorData) => {
+      // alert(dataSet.date + ' ' + this.dateStart.valueOf() + ' ' + this.dateEnd.valueOf())
       if (dataSet.date.valueOf() >= this.dateStart.valueOf() && dataSet.date.valueOf() <= (this.dateEnd.valueOf() + oneDayInMs)) {
         return dataSet;
       } else {
