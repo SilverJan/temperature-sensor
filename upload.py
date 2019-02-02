@@ -1,47 +1,42 @@
 #!/usr/bin/python
 import csv
 import json
-import glob, os
+import os
 
-#import firebase_admin
-#from firebase_admin import credentials
-#cred = credentials.Cert('')
-#firebase_admin.initialize_app(cred, {'databaseURL':''})
+# import firebase_admin
+# from firebase_admin import credentials
+# cred = credentials.Cert('')
+# firebase_admin.initialize_app(cred, {'databaseURL':''})
 
-csvfiles = []
+csv_files = []
 for file in os.listdir('logs'):
-	if '.csv.2' in file:
-		csvfiles.append(file)
+    if '.csv.2' in file or file == 'temps.csv':
+        csv_files.append(file)
 
-with open('logs/temps_big.csv', 'w') as outfile:
-	for fname in csvfiles:
-		with open('logs/' + fname) as infile:
-			for line in infile:
-				outfile.write(line)
+with open('logs/temps_big.csv', 'w') as out_file:
+    for f_name in csv_files:
+        with open('logs/' + f_name) as in_file:
+            for line in in_file:
+                out_file.write(line)
 
-csvfile = open('logs/temps_big.csv','r')
-jsonfile = open('logs/temps.json','w')
+csv_file = open('logs/temps_big.csv', 'r')
+json_file = open('logs/temps.json', 'w')
 
-countrdr = csv.DictReader(csvfile)
-totalrows = 0
-for row in countrdr:
-	totalrows += 1
-csvfile.seek(0)
+count_rdr = csv.DictReader(csv_file)
+total_rows = 0
+for row in count_rdr:
+    total_rows += 1
+csv_file.seek(0)
 
-fieldnames = ("date", "temperature", "humidity")
-reader = csv.DictReader(csvfile, fieldnames)
+field_names = ("date", "temperature", "humidity")
+reader = csv.DictReader(csv_file, field_names)
 
-jsonfile.write('[')
-currentrow = -1
+json_file.write('[')
+current_row = -1
 for row in reader:
-	currentrow += 1
-	json.dump(row, jsonfile)
-	if currentrow == totalrows:
-		jsonfile.write(']')
-	else:
-		jsonfile.write(',\n')
-
-# remove last line and ,
-#with open(jsonfile, 'rb+') as filehandle:
-#	filehandle.seek(-3, os.SEEK_END)
-#	filehandle.truncate()
+    current_row += 1
+    json.dump(row, json_file)
+    if current_row == total_rows:
+        json_file.write(']')
+    else:
+        json_file.write(',\n')
