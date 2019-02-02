@@ -1,11 +1,11 @@
-<div class="container-fluid full-height" style="padding: 0px;">
-  <div class="container-fluid full-height no-padding">
+<div class="container-fluid h-100" style="padding: 0;">
+  <div class="container-fluid h-100 no-padding">
     <!-- nav bar -->
     <nav class="navbar navbar-dark bg-dark">
       <a class="navbar-brand" style="color: #FFF">Temperature & Humidity Measurement Tool</a>
     </nav>
     <!-- settings bar -->
-    <nav class="navbar navbar-light" style="background: gray">
+    <nav class="navbar navbar-light" style="background: gray; padding-bottom: 0">
       <form class="form-inline">
         <mat-slide-toggle
           class=""
@@ -15,7 +15,7 @@
           name="graphOnlyForm">
           Show graph only
         </mat-slide-toggle>
-        <mat-form-field class="example-full-width" style="padding: 0 10px 0 10px">
+        <mat-form-field class="" style="padding: 0 10px 0 10px">
           <input matInput [(ngModel)]="dateStart" [matDatepicker]="pickerStart" placeholder="Choose a start date (incl.)"
                  name="dateStartForm"
                  (dateChange)="onDateChange('change', $event)">
@@ -24,7 +24,7 @@
           </mat-datepicker-toggle>
           <mat-datepicker #pickerStart></mat-datepicker>
         </mat-form-field>
-        <mat-form-field class="example-full-width">
+        <mat-form-field class="">
           <input matInput [(ngModel)]="dateEnd" [matDatepicker]="pickerEnd" placeholder="Choose an end date (incl.)"
                  name="dateEndForm"
                  (dateChange)="onDateChange('change', $event)">
@@ -36,9 +36,25 @@
       </form>
     </nav>
     <!-- core -->
-    <div class="col-md" style="">
-      <div class="row full-height">
-        <div class="col-md-6 full-height" *ngIf="!graphOnly" style="overflow-y: scroll; max-height: 500px; top: 20px">
+    <div class="col-md h-75" style="">
+      <div class="row h-100 align-items-center justify-content-center">
+        <!-- spinner while fetching data -->
+        <div class="col-md-1" *ngIf="dataComplete.length == 0">
+          <mat-progress-spinner
+            class=""
+            [color]="spinnerColor"
+            [mode]="spinnerMode">
+          </mat-progress-spinner>
+          Loading...
+        </div>
+        <!-- spinner when do selected data -->
+        <div class="col-md-8" *ngIf="dataInScope.length == 0 && dataComplete.length > 0">
+          <div class="alert alert-danger" role="alert">
+            No data found for the given filter. Please change your filter.
+          </div>
+        </div>
+        <!-- table view -->
+        <div class="col-md-6 h-100" *ngIf="dataInScope.length > 0 && !graphOnly" style="overflow-y: scroll; top: 20px">
           <table class="table table-dark table-hover">
             <thead>
             <tr>
@@ -56,7 +72,8 @@
             </tbody>
           </table>
         </div>
-        <div class="full-height" [ngClass]="{'col-md-6': !graphOnly, 'col-md': graphOnly}">
+        <!-- graph view -->
+        <div class="full-height" [ngClass]="{'col-md-6': !graphOnly, 'col-md': graphOnly}" *ngIf="dataInScope.length > 0">
           <app-graph *ngIf="dataInScope.length != 0" [data]="dataInScope"></app-graph>
         </div>
       </div>
@@ -69,3 +86,4 @@
   </div>
 
   <router-outlet></router-outlet>
+</div>

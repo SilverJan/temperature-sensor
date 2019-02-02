@@ -19,6 +19,7 @@ export class GraphComponent implements OnInit, OnChanges {
   public lineChartLabels: Array<any> = [];
   public lineChartOptions: any = {
     responsive: true,
+    maintainAspectRatio: false
   };
   public lineChartColors: Array<any> = [
     { // grey

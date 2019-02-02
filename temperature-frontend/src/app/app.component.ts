@@ -13,12 +13,15 @@ export class AppComponent {
 
 
   // variables for the toggle button
-  color = 'accent';
+  color = 'primary';
   graphOnly = false;
   disabled = false;
   dateStart = new Date();
   dateEnd = new Date();
 
+  // variables for spinner
+  spinnerMode = 'indeterminate';
+  spinnerColor = 'primary';
 
   constructor(private dataService: DataService) {
     this.dateStart.setDate(this.dateStart.getDate() - 14);

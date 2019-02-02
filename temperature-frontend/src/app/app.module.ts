@@ -12,7 +12,7 @@ import {
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
-  MatNativeDateModule,
+  MatNativeDateModule, MatProgressSpinnerModule,
   MatSlideToggleModule
 } from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -36,7 +36,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     MatInputModule,
     MatFormFieldModule,
     MatSlideToggleModule,
-    MatDatepickerModule],
+    MatDatepickerModule,
+    MatProgressSpinnerModule],
   providers: [],
   bootstrap: [AppComponent]
 })
