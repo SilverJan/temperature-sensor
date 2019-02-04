@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +10,14 @@ export class DataService {
   constructor(private http: HttpClient) {
   }
 
-  configUrl = 'http://192.168.1.69/logs/temps.json';
+  baseUri = environment.baseUri;
+  configUrl = `http://${this.baseUri}/logs/temps.json`;
+  mock = environment.mock;
 
   getTemperature() {
+    if (this.mock) {
+      return this.http.get(`http://${this.baseUri}/assets/mockData.json`);
+    }
     return this.http.get(this.configUrl);
   }
 
