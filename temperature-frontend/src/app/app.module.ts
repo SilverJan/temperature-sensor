@@ -8,11 +8,13 @@ import {GraphComponent} from './graph/graph.component';
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
+  MatButtonModule,
   MatDatepickerModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
-  MatNativeDateModule, MatProgressSpinnerModule,
+  MatNativeDateModule,
+  MatProgressSpinnerModule,
   MatSlideToggleModule
 } from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -37,7 +39,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     MatFormFieldModule,
     MatSlideToggleModule,
     MatDatepickerModule,
-    MatProgressSpinnerModule],
+    MatProgressSpinnerModule,
+    MatButtonModule],
   providers: [],
   bootstrap: [AppComponent]
 })
