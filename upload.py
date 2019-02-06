@@ -9,18 +9,19 @@ import os
 # firebase_admin.initialize_app(cred, {'databaseURL':''})
 
 csv_files = []
-for file in os.listdir('logs'):
+logs_dir = '/home/pi/dev/temperature-sensor/logs/'
+for file in os.listdir(logs_dir):
     if '.csv.2' in file or file == 'temps.csv':
         csv_files.append(file)
 
-with open('logs/temps_big.csv', 'w') as out_file:
+with open(logs_dir + 'temps_big.csv', 'w') as out_file:
     for f_name in csv_files:
-        with open('logs/' + f_name) as in_file:
+        with open(logs_dir + f_name) as in_file:
             for line in in_file:
                 out_file.write(line)
 
-csv_file = open('logs/temps_big.csv', 'r')
-json_file = open('logs/temps.json', 'w')
+csv_file = open(logs_dir + 'temps_big.csv', 'r')
+json_file = open(logs_dir + 'temps.json', 'w')
 
 count_rdr = csv.DictReader(csv_file)
 total_rows = 0
