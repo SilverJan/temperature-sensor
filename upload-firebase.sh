@@ -3,4 +3,5 @@
 # login with sudo firebase login --no-localhost
 # has to be done one time & manually
 
-sudo firebase --project temperature-sensor-228507 database:set /data logs/temps.json -y
+DIR="/home/pi/dev/temperature-sensor/logs/temps.json"
+sudo firebase --project temperature-sensor-228507 database:set /data $DIR -y #--debug
