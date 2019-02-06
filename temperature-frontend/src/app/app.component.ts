@@ -87,7 +87,7 @@ export class AppComponent implements OnInit {
     this.isLoadingError = false;
     this.loadingError = null;
     return new Promise(function (resolve, reject) {
-      that.dataService.getTemperature()
+      that.dataService.getData()
         .subscribe((data: Array<ISensorData>) => {
           data.forEach((dataSet: ISensorData) => {
             // comes a  s   2019-01-13 14:34:02

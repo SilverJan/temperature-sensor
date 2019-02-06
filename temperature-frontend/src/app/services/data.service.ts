@@ -2,23 +2,25 @@ import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import {AngularFireDatabase} from '@angular/fire/database';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private db: AngularFireDatabase ) {
   }
 
   baseUri = environment.baseUri;
   configUrl = `http://${this.baseUri}/logs/temps.json`;
   mock = environment.mock;
 
-  getTemperature() {
+  getData():Observable<any> {
     if (this.mock) {
       return this.http.get(`http://${this.baseUri}/assets/mockData.json`);
     }
-    return this.http.get(this.configUrl);
+    return this.db.list('data').valueChanges();
+    //return this.http.get(this.configUrl);
   }
 
   private static extractData(res: Response) {
