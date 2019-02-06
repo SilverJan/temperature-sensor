@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DataService} from './services/data.service';
 import {MatDatepickerInputEvent} from '@angular/material';
 
@@ -7,15 +7,21 @@ import {MatDatepickerInputEvent} from '@angular/material';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   dataInScope: Array<ISensorData> = [];
   dataComplete: Array<ISensorData> = [];
-
+  latestDataSet: ISensorData;
 
   // variables for the toggle button
   color = 'primary';
   graphOnly = false;
   disabled = false;
+
+  // variables for datePicker
+  dateFilter = (d: Date): boolean => {
+    // will be changed later in loadConfig() as we have to wait for data to be ready
+    return false;
+  };
   dateStart = new Date();
   dateEnd = new Date();
 
@@ -23,81 +29,161 @@ export class AppComponent {
   spinnerMode = 'indeterminate';
   spinnerColor = 'primary';
 
+  // miscellaneous variables
+  isMobile = false;
+  isLoadingError = false;
+  loadingError: Error = null;
+
   constructor(private dataService: DataService) {
-    this.dateStart.setDate(this.dateStart.getDate() - 14);
   }
 
   ngOnInit() {
-    // this.data.push(
-    //   {
-    //     date: new Date(2019, 1, 1, 3, 12, 0),
-    //     temperature: 28,
-    //     humidity: 30
-    //   },
-    //   {
-    //     date: new Date(2019, 1, 1, 9, 12, 0),
-    //     temperature: 29,
-    //     humidity: 32
-    //   },
-    //   {
-    //     date: new Date(2019, 1, 1, 18, 12, 0),
-    //     temperature: 30,
-    //     humidity: 35
-    //   },
-    //   {
-    //     date: new Date(2019, 1, 1, 21, 12, 0),
-    //     temperature: 25,
-    //     humidity: 25
-    //   }
-    // );
+    this.resetStartEndDates();
 
-    this.loadConfig();
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent)) {
+      this.isMobile = true;
+    }
+    this.loadConfig().then(() => {
+      this.updateDataInScope();
+      this.updateDateFilter();
+      this.setDatePickers();
+      this.setLatestDataSet();
+    });
   }
 
-  loadConfig() {
-    this.dataService.getTemperature()
-      .subscribe((data: Array<ISensorData>) => {
-        data.forEach((dataSet: ISensorData) => {
-          // comes as   2019-01-13 14:34:02
-          // for iOS: replace dash else it cannot be converted
-          // see https://stackoverflow.com/questions/13363673/javascript-date-is-invalid-on-ios
-          dataSet.date = new Date(dataSet.date.toString().replace(/-/g, '/'));
-          dataSet.temperature = parseFloat(String(dataSet.temperature));
-          dataSet.humidity = parseFloat(String(dataSet.humidity));
-          this.dataComplete.push(dataSet)
+  /**
+   * 1) Resets data arrays
+   * 2) Reloads data from server
+   * 3) Applies filters
+   * 4) Sets latest data set
+   * Executed e.g. when hitting refresh button
+   */
+  refreshData(): void {
+    this.resetDataArrays();
+    this.loadConfig().then(() => {
+      this.updateDataInScope();
+      this.updateDateFilter();
+      this.setLatestDataSet();
+    });
+  }
+
+  /**
+   * Set data arrays back to zero
+   */
+  private resetDataArrays(): void {
+    this.dataComplete = [];
+    this.dataInScope = [];
+  }
+
+  /**
+   * 1) Loads the data from the file server
+   * 2) Parses the data in the right format
+   * 3) Sorts the data
+   * Returns a promise which can trigger subsequent activities
+   */
+  loadConfig(): Promise<any> {
+    let that = this;
+    this.isLoadingError = false;
+    this.loadingError = null;
+    return new Promise(function (resolve, reject) {
+      that.dataService.getTemperature()
+        .subscribe((data: Array<ISensorData>) => {
+          data.forEach((dataSet: ISensorData) => {
+            // comes a  s   2019-01-13 14:34:02
+            // for iOS: replace dash else it cannot be converted
+            // see https://stackoverflow.com/questions/13363673/javascript-date-is-invalid-on-ios
+            dataSet.date = new Date(dataSet.date.toString().replace(/-/g, '/'));
+            dataSet.temperature = parseFloat(String(dataSet.temperature));
+            dataSet.humidity = parseFloat(String(dataSet.humidity));
+            that.dataComplete.push(dataSet)
+          });
+          that.dataComplete.sort(function (a, b) {
+            // Turn your strings into dates, and then subtract them
+            // to get a value that is either negative, positive, or zero.
+            return b.date.valueOf() - a.date.valueOf();
+          });
+          that.dataComplete = that.dataComplete.reverse();
+          resolve();
+        }, error => {
+          that.isLoadingError = true;
+          that.loadingError = error;
+          reject(error);
         });
-        this.dataComplete.sort(function (a, b) {
-          // Turn your strings into dates, and then subtract them
-          // to get a value that is either negative, positive, or zero.
-          return b.date.valueOf() - a.date.valueOf();
-        });
-        this.dataComplete = this.dataComplete.reverse();
-        this.updateDataInScope()
+    });
+  }
+
+  /**
+   * Update datePicker filter so that only dates can be chosen where data sets are available
+   */
+  private updateDateFilter(): void {
+    this.dateFilter = (d: Date): boolean => {
+      return this.dataComplete.some((dataSet: ISensorData) => {
+        let d2 = dataSet.date;
+        return d.getFullYear() === d2.getFullYear() &&
+          d.getMonth() === d2.getMonth() &&
+          d.getDate() === d2.getDate()
       });
+    };
   }
 
-  updateDataInScope() {
+  /**
+   * Assigns the subset of dataComplete which is in range of dateStart and dateEnd
+   */
+  updateDataInScope(): void {
     if (this.dateEnd == null || this.dateStart == null) {
       this.dataInScope = this.dataComplete;
     }
-    console.info('Before update: ' + this.dataInScope.length);
+    console.debug('Before update: ' + this.dataInScope.length);
 
-    let oneDayInMs = 86400000;
     this.dataInScope = this.dataComplete.filter((dataSet: ISensorData) => {
-      // alert(dataSet.date + ' ' + this.dateStart.valueOf() + ' ' + this.dateEnd.valueOf())
-      if (dataSet.date.valueOf() >= this.dateStart.valueOf() && dataSet.date.valueOf() <= (this.dateEnd.valueOf() + oneDayInMs)) {
+      // FYI: currently we only check on day basis. No check on minute basis possible currently.
+      if (dataSet.date.valueOf() >= this.dateStart.valueOf() && dataSet.date.valueOf() <= (this.dateEnd.valueOf())) {
         return dataSet;
       } else {
         console.debug("Not in scope: " + dataSet.date)
       }
     });
-    console.info('After update: ' + this.dataInScope.length);
+    console.debug('After update: ' + this.dataInScope.length);
 
     // Slicing needed to update children components
     this.dataInScope = this.dataInScope.slice();
   }
 
-  onDateChange(type: string, event: MatDatepickerInputEvent<Date>) {
+  /**
+   * Sets dateStart and dateEnd to the date of the latest data set available
+   */
+  setDatePickers(): void {
+    this.dateStart.setDate(
+      this.dataComplete[this.dataComplete.length - 1].date.getDate());
+    this.dateEnd.setDate(
+      this.dataComplete[this.dataComplete.length - 1].date.getDate());
+  }
+
+  /**
+   * Reset dateStart and dateEnd to 00:00:00 and 23:59:59 respectively
+   */
+  private resetStartEndDates(): void {
+    this.dateStart.setHours(0, 0, 0);
+    this.dateEnd.setHours(23, 59, 59);
+  }
+
+  /**
+   * Set the latest available data set (for widget in UI)
+   */
+  setLatestDataSet(): void {
+    this.latestDataSet = this.dataComplete[this.dataComplete.length - 1];
+  }
+
+  /**
+   * Event handler for MatDatepicker
+   * 1) Resets start and end dates
+   * 2) Updates data in scope
+   * @param type
+   * @param event
+   */
+  onDateChange(type: string, event: MatDatepickerInputEvent<Date>): void {
+    this.resetStartEndDates();
     this.updateDataInScope();
   }
 }
