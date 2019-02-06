@@ -4,8 +4,11 @@
 
 export const environment = {
   production: false,
-  baseUri: 'localhost:4200',
-  mock: true
+  baseUri: '192.168.1.69',
+  mock: false
+  // use the following for local JSON file mocking
+  // baseUri: 'localhost:4200',
+  // mock: true
 };
 
 /*
