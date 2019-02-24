@@ -1,7 +1,7 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/dist # remember, this is okay. For GitHub pages it should be in project root docs
+/dist
 /tmp
 /out-tsc
 
