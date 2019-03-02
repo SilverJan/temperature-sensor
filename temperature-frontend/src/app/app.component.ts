@@ -134,17 +134,17 @@ export class AppComponent implements OnInit {
     if (this.dateEnd == null || this.dateStart == null) {
       this.dataInScope = this.dataComplete;
     }
-    console.debug('Before update: ' + this.dataInScope.length);
+    //console.debug('Before update: ' + this.dataInScope.length);
 
     this.dataInScope = this.dataComplete.filter((dataSet: ISensorData) => {
       // FYI: currently we only check on day basis. No check on minute basis possible currently.
       if (dataSet.date.valueOf() >= this.dateStart.valueOf() && dataSet.date.valueOf() <= (this.dateEnd.valueOf())) {
         return dataSet;
       } else {
-        console.debug("Not in scope: " + dataSet.date)
+        //console.debug("Not in scope: " + dataSet.date)
       }
     });
-    console.debug('After update: ' + this.dataInScope.length);
+    //console.debug('After update: ' + this.dataInScope.length);
 
     // Slicing needed to update children components
     this.dataInScope = this.dataInScope.slice();

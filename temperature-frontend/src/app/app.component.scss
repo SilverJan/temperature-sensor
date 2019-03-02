@@ -6,3 +6,15 @@
   }
 
 }
+
+.navbar-title {
+  @media (max-width: 600px) {
+    font-size: medium;
+  }
+}
+
+.col-latest-data {
+  @media (min-width: 767px) {
+    text-align: right;
+  }
+}
