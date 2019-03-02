@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {DataService} from './services/data.service';
 import {MatDatepickerInputEvent} from '@angular/material';
+import {BUILD_META} from '../environments/build.meta';
+
 
 @Component({
   selector: 'app-root',
@@ -11,6 +13,9 @@ export class AppComponent implements OnInit {
   dataInScope: Array<ISensorData> = [];
   dataComplete: Array<ISensorData> = [];
   latestDataSet: ISensorData;
+
+  version: string = BUILD_META.version;
+  build: string = BUILD_META.buildDate;
 
   // variables for the toggle button
   color = 'primary';
