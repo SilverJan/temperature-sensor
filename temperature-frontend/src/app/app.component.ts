@@ -95,7 +95,7 @@ export class AppComponent implements OnInit {
       that.dataService.getData()
         .subscribe((data: Array<ISensorData>) => {
           data.forEach((dataSet: ISensorData) => {
-            // comes a  s   2019-01-13 14:34:02
+            // comes as   2019-01-13 14:34:02
             // for iOS: replace dash else it cannot be converted
             // see https://stackoverflow.com/questions/13363673/javascript-date-is-invalid-on-ios
             dataSet.date = new Date(dataSet.date.toString().replace(/-/g, '/'));
