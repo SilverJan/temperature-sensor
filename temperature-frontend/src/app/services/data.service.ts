@@ -17,7 +17,7 @@ export class DataService {
 
   getData():Observable<any> {
     if (this.mock) {
-      return this.http.get(`http://${this.baseUri}/assets/mockData.json`);
+      return this.http.get(`http://${this.baseUri}/assets/mockData_big.json`);
     }
     return this.db.list('data').valueChanges();
     //return this.http.get(this.configUrl);
