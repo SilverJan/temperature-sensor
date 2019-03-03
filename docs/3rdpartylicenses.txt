@@ -632,11 +632,11 @@ MIT
 
 @angular/material/datepicker
 
-@angular/material/slide-toggle
-
 @angular/material/form-field
 
 @angular/material/icon
+
+@angular/material/slide-toggle
 
 @angular/material/progress-spinner
 
