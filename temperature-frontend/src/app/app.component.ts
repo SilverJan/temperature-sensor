@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
   latestDataSet: ISensorData;
 
   version: string = BUILD_META.version;
-  build: string = BUILD_META.buildDate;
+  buildDate: Date = new Date(BUILD_META.buildDate);
 
   // variables for the toggle button
   color = 'primary';

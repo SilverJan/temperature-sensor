@@ -55,7 +55,7 @@
             <button type="button"
                     class="btn btn-secondary btn-sm"
                     disabled>
-              Current values ({{latestDataSet.date | date:'MM/dd/yyyy hh:mm'}}): <h5
+              Current values ({{latestDataSet.date | date:'MM/dd/yyyy H:mm'}}): <h5
               style="margin-bottom: 0">{{latestDataSet.temperature}} °C | {{latestDataSet.humidity}}% </h5>
             </button>
           </div>
@@ -89,8 +89,8 @@
           <div class="alert alert-danger" style="text-align: center" role="alert">
             No data found for the given filter. Please change your filter.<br>
             Total datasets: {{dataComplete.length}}<br>
-            Start date: {{dateStart | date:'MM/dd/yyyy hh:mm:ss'}}<br>
-            End date: {{dateEnd | date:'MM/dd/yyyy hh:mm:ss'}}
+            Start date: {{dateStart | date:'MM/dd/yyyy H:mm:ss'}}<br>
+            End date: {{dateEnd | date:'MM/dd/yyyy H:mm:ss'}}
           </div>
         </div>
         <!-- alert when connection error -->
@@ -112,7 +112,7 @@
             </thead>
             <tbody>
             <tr *ngFor="let dataSet of this.dataInScope; let i = index">
-              <td>{{dataSet.date | date:'MM/dd/yyyy hh:mm:ss'}}</td>
+              <td>{{dataSet.date | date:'MM/dd/yyyy H:mm:ss'}}</td>
               <td>{{dataSet.temperature}} °C</td>
               <td>{{dataSet.humidity}}%</td>
             </tr>
@@ -133,7 +133,7 @@
       <form class="container-fluid form-inline no-padding">
         <div class="row justify-content-center full-width no-gutters" style="text-align: center">
           <div class="col-12" style="color: white;">
-            Version: {{version}} | Build: {{build}}
+            Version: {{version}} | Build: {{buildDate | date:'yyyy-MM-dd-H-mm-ss'}}
           </div>
         </div>
       </form>
