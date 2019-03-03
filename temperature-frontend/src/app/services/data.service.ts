@@ -23,6 +23,14 @@ export class DataService {
     //return this.http.get(this.configUrl);
   }
 
+  getDataOnce(): Promise<any> {
+    if (this.mock) {
+      return this.http.get(`http://${this.baseUri}/assets/mockData_big.json`).toPromise();
+    }
+    // TODO: this is just a workaround as there is a performance issue (freezes) with getData() approach
+    return this.db.list('data').query.once("value");
+  }
+
   private static extractData(res: Response) {
     if (res['data']) {
       return res['data'];

@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {DataService} from './services/data.service';
 import {MatDatepickerInputEvent} from '@angular/material';
 import {BUILD_META} from '../environments/build.meta';
+import DataSnapshot = firebase.database.DataSnapshot;
 
 
 @Component({
@@ -92,8 +93,14 @@ export class AppComponent implements OnInit {
     this.isLoadingError = false;
     this.loadingError = null;
     return new Promise(function (resolve, reject) {
-      that.dataService.getData()
-        .subscribe((data: Array<ISensorData>) => {
+      that.dataService.getDataOnce()
+        .then((dataSnapshot: DataSnapshot | Array<ISensorData>) => {
+          let data: Array<ISensorData>;
+          if (!(dataSnapshot instanceof Array)) {
+            data = dataSnapshot.val();
+          } else { // if mock is used
+            data = dataSnapshot;
+          }
           data.forEach((dataSet: ISensorData) => {
             // comes as   2019-01-13 14:34:02
             // for iOS: replace dash else it cannot be converted
