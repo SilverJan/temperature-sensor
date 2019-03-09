@@ -118,6 +118,10 @@ export class AppComponent implements OnInit {
             dataSet.date = new Date(dataSet.date.toString().replace(/-/g, '/'));
             dataSet.temperature = parseFloat(String(dataSet.temperature));
             dataSet.humidity = parseFloat(String(dataSet.humidity));
+            // TODO: Fix this on Raspberry Pi
+            if (dataSet.humidity > 100) {
+              return;
+            }
             that.dataComplete.push(dataSet)
           });
           that.dataComplete.sort(function (a, b) {
