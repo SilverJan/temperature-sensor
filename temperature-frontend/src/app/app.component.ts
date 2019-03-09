@@ -1,6 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {DataService} from './services/data.service';
-import {MatDatepickerInputEvent} from '@angular/material';
+import {
+  MatDatepickerInputEvent,
+  MatPaginator,
+  MatTableDataSource
+} from '@angular/material';
 import {BUILD_META} from '../environments/build.meta';
 import DataSnapshot = firebase.database.DataSnapshot;
 
@@ -17,6 +21,11 @@ export class AppComponent implements OnInit {
 
   version: string = BUILD_META.version;
   buildDate: Date = new Date(BUILD_META.buildDate);
+
+  // variables for data table
+  displayedColumns: string[] = ['dateTime', 'temperature', 'humidity'];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  dataSource = new MatTableDataSource<ISensorData>();
 
   // variables for the toggle button
   color = 'primary';
@@ -96,6 +105,7 @@ export class AppComponent implements OnInit {
       that.dataService.getDataOnce()
         .then((dataSnapshot: DataSnapshot | Array<ISensorData>) => {
           let data: Array<ISensorData>;
+          // TODO: Make this nicer
           if (!(dataSnapshot instanceof Array)) {
             data = dataSnapshot.val();
           } else { // if mock is used
@@ -160,6 +170,10 @@ export class AppComponent implements OnInit {
 
     // Slicing needed to update children components
     this.dataInScope = this.dataInScope.slice();
+
+    // Reassigning the dataSource data for the DataTable
+    this.dataSource.data = this.dataInScope;
+    this.dataSource.paginator = this.paginator;
   }
 
   /**

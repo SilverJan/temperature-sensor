@@ -13,9 +13,9 @@ import {
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
-  MatNativeDateModule,
+  MatNativeDateModule, MatPaginatorModule,
   MatProgressSpinnerModule,
-  MatSlideToggleModule
+  MatSlideToggleModule, MatTableModule
 } from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {environment} from '../environments/environment';
@@ -47,7 +47,9 @@ import {AngularFireDatabaseModule} from '@angular/fire/database';
     MatSlideToggleModule,
     MatDatepickerModule,
     MatProgressSpinnerModule,
-    MatButtonModule],
+    MatButtonModule,
+    MatTableModule,
+    MatPaginatorModule],
   providers: [],
   bootstrap: [AppComponent]
 })
