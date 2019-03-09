@@ -564,15 +564,6 @@ MIT
 
 firebase/database
 
-@angular/platform-browser
-MIT
-
-@angular/router
-MIT
-
-@angular/animations
-MIT
-
 @angular/cdk
 MIT
 The MIT License
@@ -623,6 +614,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
+@angular/platform-browser
+MIT
+
+@angular/router
+MIT
+
+@angular/animations
+MIT
+
 @angular/material/dialog
 
 @angular/forms
@@ -632,6 +632,8 @@ MIT
 
 @angular/material/datepicker
 
+@angular/material/tooltip
+
 @angular/material/form-field
 
 @angular/material/icon
@@ -639,6 +641,14 @@ MIT
 @angular/material/slide-toggle
 
 @angular/material/progress-spinner
+
+@angular/material/table
+
+@angular/material/core
+
+@angular/material/select
+
+@angular/material/paginator
 
 @angular/fire/auth
 MIT
