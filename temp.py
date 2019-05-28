@@ -19,21 +19,21 @@ try:
     # buffering=0 to overwrite system default buffer
     # needed when Python runs in background
     # file = open(logPath, "a", buffering=0)
-    #	with open(csvPath, mode='a') as csv_file:
+    #   with open(csvPath, mode='a') as csv_file:
     while True:
         time_now = time.strftime("%Y-%m-%d %H:%M:%S")
         humidity, temperature = dht.read_retry(dht.DHT11, 4)
-	if isinstance(humidity, basestring) or isinstance(temperature, basestring):
-                print("Error while reading sensor data - Values: {0};{1}".format(temperature, humidity))
-		continue
-	try:
-	        output = "{0},{1:0.1f},{2:0.1f}".format(time_now, temperature, humidity)
+        if isinstance(humidity, basestring) or isinstance(temperature, basestring):
+            print("Error while reading sensor data - Values: {0};{1}".format(temperature, humidity))
+            continue
+        try:
+            output = "{0},{1:0.1f},{2:0.1f}".format(time_now, temperature, humidity)
         except ValueError:
-		print("ValueError for values: {0}, {1}, {2}".format(time_now, temperature, humidity))
-		continue
-	else:
-		logger.info(output)
-        	time.sleep(300)
+            print("ValueError for values: {0}, {1}, {2}".format(time_now, temperature, humidity))
+            continue
+        else:
+            logger.info(output)
+            time.sleep(300)
 
 except KeyboardInterrupt:
     pass  # Go to next line
