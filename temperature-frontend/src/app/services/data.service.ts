@@ -19,7 +19,8 @@ export class DataService {
     if (this.mock) {
       return this.http.get(`http://${this.baseUri}/assets/mockData_big.json`);
     }
-    return this.db.list('data').valueChanges();
+    return this.db.list('data', ref => ref.orderByChild('date').limitToLast(500))
+      .valueChanges();
     //return this.http.get(this.configUrl);
   }
 

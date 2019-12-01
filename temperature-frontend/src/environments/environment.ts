@@ -12,11 +12,11 @@ export const environment = {
     storageBucket: "temperature-sensor-228507.appspot.com",
     messagingSenderId: "423130109668"
   },
-  baseUri: '192.168.1.69',
-  mock: false
+  // baseUri: '192.168.1.69',
+  // mock: true,
   // use the following for local JSON file mocking
-  // baseUri: 'localhost:4200',
-  // mock: true
+  baseUri: 'localhost:4200',
+  mock: true
 };
 
 /*

@@ -32,6 +32,9 @@ export class AppComponent implements OnInit {
   graphOnly = false;
   disabled = false;
 
+  // variables for ai radio button
+  aiEnabled = true;
+
   // variables for datePicker
   dateFilter = (d: Date): boolean => {
     // will be changed later in loadConfig() as we have to wait for data to be ready

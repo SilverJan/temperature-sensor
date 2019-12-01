@@ -1,6 +1,22 @@
 # TemperatureFrontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.1.
+## Deploying in GitHub pages
+Run
+
+    ng build --prod --output-path docs --base-href /temperature-sensor/
+    # or
+    npm build-ghp
+    
+and then
+
+    cd ..
+    cp docs/index.html docs/404.html    # for Linux
+    copy docs\index.html docs\404.html  # for Windows
+    
+    
+Afterwards, commit and push the changes.
+
+Source: https://github.com/angular/angular-cli/wiki/stories-github-pages
 
 ## Development server
 

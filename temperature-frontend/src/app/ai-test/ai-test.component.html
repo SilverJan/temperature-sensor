@@ -1,0 +1,36 @@
+<!--<div id="app">-->
+<!--  <div><video #video id="video" width="640" height="480" autoplay></video></div>-->
+<!--  <div><button id="snap" (click)="capture()">Snap Photo</button></div>-->
+<!--  <canvas #canvas id="canvas" width="640" height="480"></canvas>-->
+<!--  <ul>-->
+<!--    <li *ngFor="let c of captures">-->
+<!--      <img src="{{ c }}" height="50" />-->
+<!--    </li>-->
+<!--  </ul>-->
+<!--</div>-->
+
+<div class="container-fluid h-100 full-width row" style="">
+  <!-- camera view-->
+  <div class="col-md-6 h-100">
+    <div>
+      <video #video id="video" width="640" height="480" autoplay></video>
+    </div>
+    <div>
+      <button id="snap" (click)="capture()" *ngIf="model !== undefined">Snap Photo</button>
+    </div>
+    <canvas #canvas id="canvas" width="640" height="480"></canvas>
+
+  </div>
+  <!-- result view -->
+  <div class="col-md-6 h-100" style="">
+    <h1>Predictions</h1>
+
+    <div *ngIf="predictions.length > 0">
+        <ul>
+          <li *ngFor="let p of predictions">
+            Prediction: {{p.className}} ({{p.probability}})
+          </li>
+        </ul>
+    </div>
+  </div>
+</div>

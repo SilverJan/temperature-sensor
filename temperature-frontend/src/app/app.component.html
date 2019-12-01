@@ -51,7 +51,16 @@
             <button mat-raised-button style="margin: 0 10px 0 10px" (click)="refreshData()">Reload data
             </button>
           </div>
-          <div class="col-md-5 col col-latest-data" style="padding: 5px;">
+          <div class="col-md-2 col-6" style="padding: 0 5px 0 5px;">
+            <mat-slide-toggle
+              [(ngModel)]="aiEnabled"
+              [color]="color"
+              [disabled]="disabled"
+              name="enableAiForm">
+              Enable AI
+            </mat-slide-toggle>
+          </div>
+          <div class="col-md-3 col col-latest-data" style="padding: 5px;">
             <button type="button"
                     class="btn btn-secondary btn-sm"
                     disabled>
@@ -72,59 +81,68 @@
       <!--</div>-->
     </nav>
     <!-- core -->
-    <div class="col h-75" style="">
+    <div class="col h-75">
       <div class="row h-100 align-items-center justify-content-center">
-        <!-- spinner while fetching data -->
-        <div class="col" style="text-align: -webkit-center" *ngIf="!isLoadingError && dataComplete.length === 0">
-          <mat-progress-spinner
-            class=""
-            [diameter]="50"
-            [color]="spinnerColor"
-            [mode]="spinnerMode">
-          </mat-progress-spinner>
-          Loading...
+        <!-- ai view -->
+        <div *ngIf="aiEnabled" class="h-100 full-width">
+          <app-ai-test></app-ai-test>
         </div>
-        <!-- alert when no filtered data -->
-        <div class="col-xl-8 col-md-12" *ngIf="!isLoadingError && dataInScope.length === 0 && dataComplete.length > 0">
-          <div class="alert alert-danger" style="text-align: center" role="alert">
-            No data found for the given filter. Please change your filter.<br>
-            Total datasets: {{dataComplete.length}}<br>
-            Start date: {{dateStart | date:'MM/dd/yyyy H:mm:ss'}}<br>
-            End date: {{dateEnd | date:'MM/dd/yyyy H:mm:ss'}}
+        <!-- temperature view -->
+        <div *ngIf="!aiEnabled" class="row h-100 full-width">
+          <!-- spinner while fetching data -->
+          <div class="col" style="text-align: -webkit-center" *ngIf="!isLoadingError && dataComplete.length === 0">
+            <mat-progress-spinner
+              class=""
+              [diameter]="50"
+              [color]="spinnerColor"
+              [mode]="spinnerMode">
+            </mat-progress-spinner>
+            Loading...
           </div>
-        </div>
-        <!-- alert when connection error -->
-        <div class="col-xl-8 col-md-12" *ngIf="isLoadingError">
-          <div class="alert alert-danger" style="text-align: center" role="alert">
-            An error while loading the data from the server occurred. <br>
-            Error: {{loadingError.message}}
+          <!-- alert when no filtered data -->
+          <div class="col-xl-8 col-md-12"
+               *ngIf="!isLoadingError && dataInScope.length === 0 && dataComplete.length > 0">
+            <div class="alert alert-danger" style="text-align: center" role="alert">
+              No data found for the given filter. Please change your filter.<br>
+              Total datasets: {{dataComplete.length}}<br>
+              Start date: {{dateStart | date:'MM/dd/yyyy H:mm:ss'}}<br>
+              End date: {{dateEnd | date:'MM/dd/yyyy H:mm:ss'}}
+            </div>
           </div>
-        </div>
-        <!--table view-->
-        <div class="col-md-6 h-100 table-view mat-elevation-z8" [hidden]="dataInScope.length <= 0 || graphOnly">
-          <table mat-table [dataSource]="dataSource" class="full-width">
-            <ng-container matColumnDef="dateTime">
-              <th mat-header-cell *matHeaderCellDef> Date & Time</th>
-              <td mat-cell *matCellDef="let element"> {{element.date | date:'MM/dd/yyyy H:mm:ss'}} </td>
-            </ng-container>
-            <ng-container matColumnDef="temperature">
-              <th mat-header-cell *matHeaderCellDef> Temperature</th>
-              <td mat-cell *matCellDef="let element"> {{element.temperature}} °C</td>
-            </ng-container>
-            <ng-container matColumnDef="humidity">
-              <th mat-header-cell *matHeaderCellDef> Humidity</th>
-              <td mat-cell *matCellDef="let element"> {{element.humidity}}%</td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
-          <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons class="mat-paginator-sticky"></mat-paginator>
-        </div>
-        <!-- graph view -->
-        <div class="h-100" [ngClass]="{'col-md-6 col-sm': !graphOnly, 'col-md, col-sm': graphOnly}"
-             *ngIf="dataInScope.length > 0"
-             style="">
-          <app-graph *ngIf="dataInScope.length !== 0" [data]="dataInScope"></app-graph>
+          <!-- alert when connection error -->
+          <div class="col-xl-8 col-md-12" *ngIf="isLoadingError">
+            <div class="alert alert-danger" style="text-align: center" role="alert">
+              An error while loading the data from the server occurred. <br>
+              Error: {{loadingError.message}}
+            </div>
+          </div>
+          <!--table view-->
+          <div class="col-md-6 h-100 table-view mat-elevation-z8" [hidden]="dataInScope.length <= 0 || graphOnly">
+            <table mat-table [dataSource]="dataSource" class="full-width">
+              <ng-container matColumnDef="dateTime">
+                <th mat-header-cell *matHeaderCellDef> Date & Time</th>
+                <td mat-cell *matCellDef="let element"> {{element.date | date:'MM/dd/yyyy H:mm:ss'}} </td>
+              </ng-container>
+              <ng-container matColumnDef="temperature">
+                <th mat-header-cell *matHeaderCellDef> Temperature</th>
+                <td mat-cell *matCellDef="let element"> {{element.temperature}} °C</td>
+              </ng-container>
+              <ng-container matColumnDef="humidity">
+                <th mat-header-cell *matHeaderCellDef> Humidity</th>
+                <td mat-cell *matCellDef="let element"> {{element.humidity}}%</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons
+                           class="mat-paginator-sticky"></mat-paginator>
+          </div>
+          <!-- graph view -->
+          <div class="h-100" [ngClass]="{'col-md-6 col-sm': !graphOnly, 'col-md, col-sm': graphOnly}"
+               *ngIf="dataInScope.length > 0"
+               style="">
+            <app-graph *ngIf="dataInScope.length !== 0" [data]="dataInScope"></app-graph>
+          </div>
         </div>
       </div>
     </div>
@@ -134,7 +152,8 @@
       <form class="container-fluid form-inline no-padding">
         <div class="row justify-content-center full-width no-gutters" style="text-align: center">
           <div class="col-12" style="color: white;">
-            Version: {{version}} | Build: {{buildDate | date:'yyyy-MM-dd-H-mm-ss'}}
+            Version: {{version}} | Build: {{buildDate | date:'yyyy-MM-dd-H-mm-ss'}} | Source Code on <a
+            href="https://github.com/SilverJan/temperature-sensor">GitHub</a>
           </div>
         </div>
       </form>

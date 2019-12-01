@@ -22,12 +22,14 @@ import {environment} from '../environments/environment';
 import {AngularFireModule} from '@angular/fire';
 import {AngularFireAuthModule} from '@angular/fire/auth';
 import {AngularFireDatabaseModule} from '@angular/fire/database';
+import { AiTestComponent } from './ai-test/ai-test.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    GraphComponent
+    GraphComponent,
+    AiTestComponent
   ],
   imports: [
     BrowserModule,
