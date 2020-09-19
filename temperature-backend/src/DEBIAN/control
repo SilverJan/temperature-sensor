@@ -1,0 +1,10 @@
+Package: %PACKAGE_NAME%
+Version: %PACKAGE_VERSION%
+Section: base
+Priority: optional
+Architecture: all
+Essential: no
+Depends: python
+Installed-Size: 1000
+Maintainer: Jan Bissinger
+Description: Package which will install a temperature & humidity measuring tool

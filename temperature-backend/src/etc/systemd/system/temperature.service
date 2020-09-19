@@ -1,0 +1,17 @@
+[Unit]
+Description=Gather and upload temperature sensor data
+
+[Service]
+# Run permission service
+ExecStart=/usr/bin/python3 /opt/temperature/temp.py
+
+# keep process after user logs off
+RemainAfterExit=false
+
+# Use syslog
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=osd-permissions-package
+
+[Install]
+WantedBy=default.target

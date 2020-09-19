@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+
+pip3 install adafruit-circuitpython-dht
+
+systemctl daemon-reload
+systemctl enable temperature.service
+systemctl start temperature.service
+
+exit 0
