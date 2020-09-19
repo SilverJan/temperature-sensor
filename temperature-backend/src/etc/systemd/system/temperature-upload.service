@@ -1,0 +1,17 @@
+[Unit]
+Description=Upload temperature sensor data
+
+[Service]
+# Run permission service
+ExecStart=/usr/bin/python3 /opt/temperature/temperature-upload.py
+
+# keep process after user logs off
+RemainAfterExit=false
+
+# Use syslog
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=temperature-upload
+
+[Install]
+WantedBy=default.target

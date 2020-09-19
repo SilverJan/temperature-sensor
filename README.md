@@ -2,35 +2,29 @@
 
 This is a small application which runs on a Raspberry Pi with connected temperature and humidity sensor.
 
+## How to install package
+
+Install via
+
+	./create_deb.sh
+	sudo gdebi dist/temperature-sensor-pi_1.0.0_all.deb
+
 ## How to run it
 
-To run in foreground
+Two services are installed as part of the package installation:
 
-	python temp.py
+* temperature-gather.service -> for gathering of data and appending to csv file, runs every 5 minutes
+* temperature-upload.service -> for uploading of data to Firebase, runs hourly
 
-To run in background
-	
-	python temp.py &
+Log data is created in `/var/log/temperature/`.
 
-To run in background and despite no active terminal session
+## How to debug issues
 
-	nohup python temp.py &
+Run the following commands to get debug information on both services
 
-And get it back with
-
-    fg
-
-## Manage upload frequency
-
-By manipulating the crontab
-
-	crontab -e
-
-And edit
-
-	*/5 * * * * python /home/pi/dev/temperature-sensor/upload.py
-	*/5 * * * * /home/pi/dev/temperature-sensor/upload-firebase.sh > /dev/null
-
+	sudo systemctl status temperature-gather.service
+	sudo systemctl status temperature-upload.service
+	sudo systemctl list-timers --all # to show next run time
 
 ## Manage Firebase
 
@@ -39,7 +33,7 @@ If the database is full, and you want to run a backup, follow these steps:
 1) SSH on the server
 2) Move the existing data to a backup
 
-		cd /logs
+		cd /var/logs/temperature
 		mv temps.json temps_01-21_until_05-27.json
 		mv temps_big.csv temps_big_01-21_until_05-27.csv
 

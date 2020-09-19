@@ -3,8 +3,12 @@ set -e
 
 pip3 install adafruit-circuitpython-dht
 
+mkdir -p /var/log/temperature
+
 systemctl daemon-reload
-systemctl enable temperature.service
-systemctl start temperature.service
+systemctl enable temperature-gather.service
+systemctl start temperature-gather.service
+systemctl enable temperature-upload.service
+systemctl start temperature-upload.service
 
 exit 0

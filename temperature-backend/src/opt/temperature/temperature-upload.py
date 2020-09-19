@@ -1,7 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/python3
+# utility to create concatenated JSON file which can be upoaded to firebase
 import csv
 import json
 import os
+import subprocess
 from config import LOG_DIR
 # import firebase_admin
 # from firebase_admin import credentials
@@ -40,3 +42,9 @@ for row in reader:
         json_file.write(']')
     else:
         json_file.write(',\n')
+
+rc = subprocess.call(
+    "sudo firebase --project temperature-sensor-228507 database:set /data {} -y".format(json_file))
+
+if rc != 0:
+    print("error while uploading data to firebase")

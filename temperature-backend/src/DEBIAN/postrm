@@ -5,4 +5,6 @@ pip3 uninstall adafruit-circuitpython-dht
 
 systemctl daemon-reload
 
+rm -rf /var/log/temperature
+
 exit 0
