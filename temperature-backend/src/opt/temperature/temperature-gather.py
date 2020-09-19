@@ -26,7 +26,7 @@ try:
     #   with open(csvPath, mode='a') as csv_file:
     while True:
         time_now = time.strftime("%Y-%m-%d %H:%M:%S")
-        dhtDevice = dht.DHT22(board.D18)
+        dhtDevice = dht.DHT11(board.D4)
         temperature = dhtDevice.temperature
         humidity = dhtDevice.humidity
         if isinstance(humidity, str) or isinstance(temperature, str):
