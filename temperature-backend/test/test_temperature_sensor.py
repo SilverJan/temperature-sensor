@@ -8,6 +8,7 @@ from test_utils.systemd import *
 
 temperature_gather_service = "temperature-gather.service"
 temperature_upload_service = "temperature-upload.service"
+temperature_upload_timer = "temperature-upload.timer"
 
 
 def test_temperature_gather_service_enabled_running():
@@ -18,6 +19,9 @@ def test_temperature_gather_service_enabled_running():
 def test_temperature_upload_service_enabled():
     assert is_service_enabled(temperature_upload_service)
 
+
+def test_temperature_upload_timer_enabled():
+    assert is_service_enabled(temperature_upload_timer)
 
 @pytest.mark.parametrize(
     'directory', ["/opt/temperature", "/var/log/temperature"])
