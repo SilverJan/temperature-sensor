@@ -47,12 +47,15 @@ for row in reader:
     else:
         json_file.write(',\n')
 
+json_file.close()
+csv_file.close()
+
 # Upload data to firebase
 # login with sudo firebase login --no-localhost
 # has to be done one time & manually
 syslogger.info("trying to upload data to firebase")
 rc = subprocess.call(
-    list(f"firebase --project temperature-sensor-228507 database:set /data {json_file_path} -y".split(" ")))
+    f"firebase --project temperature-sensor-228507 database:set /data {json_file_path} -y", shell=True)
 
 if rc != 0:
     syslogger.error("error while uploading data to firebase")
