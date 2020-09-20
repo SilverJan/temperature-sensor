@@ -1,1 +1,1 @@
-LOG_DIR = '/var/log/temperature/'
+LOG_DIR = '/var/log/temperature'

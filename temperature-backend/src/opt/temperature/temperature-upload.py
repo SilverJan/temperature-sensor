@@ -15,15 +15,15 @@ for file in os.listdir(LOG_DIR):
     if '.csv.2' in file or file == 'temps.csv':
         csv_files.append(file)
 
-with open(LOG_DIR + 'temps_big.csv', 'w') as out_file:
+with open(f'{LOG_DIR}/temps_big.csv', 'w') as out_file:
     for f_name in csv_files:
         with open(LOG_DIR + f_name) as in_file:
             for line in in_file:
                 out_file.write(line)
 
-json_file_path = LOG_DIR + 'temps.json'
+json_file_path = f"{LOG_DIR}/temps.json"
 
-csv_file = open(LOG_DIR + 'temps_big.csv', 'r')
+csv_file = open(f'{LOG_DIR}/temps_big.csv', 'r')
 json_file = open(json_file_path, 'w')
 
 count_rdr = csv.DictReader(csv_file)
@@ -48,7 +48,7 @@ for row in reader:
 # login with sudo firebase login --no-localhost
 # has to be done one time & manually
 rc = subprocess.call(
-    list("sudo firebase --project temperature-sensor-228507 database:set /data {} -y".format(json_file_path).split(" ")))
+    list(f"sudo firebase --project temperature-sensor-228507 database:set /data {json_file_path} -y".split(" ")))
 
 if rc != 0:
     print("error while uploading data to firebase")

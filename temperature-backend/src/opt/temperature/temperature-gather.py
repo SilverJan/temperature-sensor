@@ -13,6 +13,7 @@ try:
     log_Path = "{}/temps.log".format(LOG_DIR)
     csv_Path = "{}/temps.csv".format(LOG_DIR)
 
+    # log management
     logger = logging.getLogger("Rotating Log")
     logger.setLevel(logging.INFO)
     handler = TimedRotatingFileHandler(
@@ -20,19 +21,19 @@ try:
     formatter = logging.Formatter('%(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-    # buffering=0 to overwrite system default buffer
-    # needed when Python runs in background
-    # file = open(logPath, "a", buffering=0)
-    #   with open(csvPath, mode='a') as csv_file:
+
+    # instantiate device once
+    dhtDevice = dht.DHT11(board.D4)
+
+    # loop forever
     while True:
         print("Trying to gather data")
         time_now = time.strftime("%Y-%m-%d %H:%M:%S")
-        dhtDevice = dht.DHT11(board.D4)
         temperature = dhtDevice.temperature
         humidity = dhtDevice.humidity
         if isinstance(humidity, str) or isinstance(temperature, str):
             print(
-                "Error while reading sensor data - Values: {0};{1}".format(temperature, humidity))
+                "Error while reading sensor data . Values: {0};{1}".format(temperature, humidity))
             continue
         try:
             OUTPUT = "{0},{1:0.1f},{2:0.1f}".format(
