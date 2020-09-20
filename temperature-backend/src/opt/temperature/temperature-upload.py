@@ -5,27 +5,28 @@ import json
 import os
 import subprocess
 from config import LOG_DIR
-# import firebase_admin
-# from firebase_admin import credentials
-# cred = credentials.Cert('')
-# firebase_admin.initialize_app(cred, {'databaseURL':''})
+from utils import get_logger
 
+syslogger = get_logger("temperature-upload")
+
+# Detect all csv files (from logrotate)
 csv_files = []
 for file in os.listdir(LOG_DIR):
     if '.csv.2' in file or file == 'temps.csv':
         csv_files.append(file)
 
-with open(f'{LOG_DIR}/temps_big.csv', 'w') as out_file:
+# Concatenate all csv files in a big file
+with open(f"{LOG_DIR}/temps_big.csv", 'w') as out_file:
     for f_name in csv_files:
-        with open(LOG_DIR + f_name) as in_file:
+        with open(f"{LOG_DIR}/f_name") as in_file:
             for line in in_file:
                 out_file.write(line)
 
 json_file_path = f"{LOG_DIR}/temps.json"
-
-csv_file = open(f'{LOG_DIR}/temps_big.csv', 'r')
+csv_file = open(f"{LOG_DIR}/temps_big.csv", 'r')
 json_file = open(json_file_path, 'w')
 
+# Read concatenated CSV file and convert to JSON
 count_rdr = csv.DictReader(csv_file)
 total_rows = 0
 for row in count_rdr:
@@ -45,10 +46,14 @@ for row in reader:
     else:
         json_file.write(',\n')
 
+# Upload data to firebase
 # login with sudo firebase login --no-localhost
 # has to be done one time & manually
+syslogger.info("trying to upload data to firebase")
 rc = subprocess.call(
     list(f"sudo firebase --project temperature-sensor-228507 database:set /data {json_file_path} -y".split(" ")))
 
 if rc != 0:
-    print("error while uploading data to firebase")
+    syslogger.error("error while uploading data to firebase")
+else:
+    syslogger.info("successfully uploaded data to firebase")

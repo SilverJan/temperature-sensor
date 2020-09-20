@@ -8,44 +8,51 @@ import adafruit_dht as dht
 import board
 
 from config import LOG_DIR
+from utils import get_logger
 
-try:
-    log_Path = "{}/temps.log".format(LOG_DIR)
-    csv_Path = "{}/temps.csv".format(LOG_DIR)
+syslogger = get_logger("temperature-gather")
 
-    # log management
-    logger = logging.getLogger("Rotating Log")
-    logger.setLevel(logging.INFO)
-    handler = TimedRotatingFileHandler(
-        csv_Path, when="d", interval=1, backupCount=500)
-    formatter = logging.Formatter('%(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
+# log management (use logging module for rotating functionality)
+csv_path = "{}/temps.csv".format(LOG_DIR)
+csv_logger = logging.getLogger(
+    "temperature-gather-csv-logger").setLevel(logging.INFO)
+handler = TimedRotatingFileHandler(
+    csv_path, when="d", interval=1, backupCount=500)
+formatter = logging.Formatter('%(message)s')
+handler.setFormatter(formatter)
+csv_logger.addHandler(handler)
 
-    # instantiate device once
-    dhtDevice = dht.DHT11(board.D4)
+# instantiate device once
+dhtDevice = dht.DHT11(board.D4)
 
-    # loop forever
-    while True:
-        print("Trying to gather data")
-        time_now = time.strftime("%Y-%m-%d %H:%M:%S")
+# loop forever
+while True:
+    syslogger.info("Trying to gather data")
+    time_now = time.strftime("%Y-%m-%d %H:%M:%S")
+
+    # Gather data
+    try:
         temperature = dhtDevice.temperature
         humidity = dhtDevice.humidity
-        if isinstance(humidity, str) or isinstance(temperature, str):
-            print(
-                "Error while reading sensor data . Values: {0};{1}".format(temperature, humidity))
-            continue
-        try:
-            OUTPUT = "{0},{1:0.1f},{2:0.1f}".format(
-                time_now, temperature, humidity)
-        except ValueError:
-            print("ValueError for values: {0}, {1}, {2}".format(
-                time_now, temperature, humidity))
-            continue
-        else:
-            print("Logged '{}' to {}. Sleeping for 1mins".format(OUTPUT, csv_Path))
-            logger.info(OUTPUT)
-            time.sleep(60)
+    except RuntimeError as err:
+        syslogger.warning("RuntimeError detected. Continue after a short sleep.")
+        time.sleep(1)
+        continue
 
-except KeyboardInterrupt:
-    pass
+    # Verify that value is not string (in case of failure)
+    if isinstance(humidity, str) or isinstance(temperature, str):
+        syslogger.warning(
+            "Error while reading sensor data . Values: {0};{1}".format(temperature, humidity))
+        continue
+
+    try:
+        OUTPUT = "{0},{1:0.1f},{2:0.1f}".format(
+            time_now, temperature, humidity)
+    except ValueError:
+        syslogger.warning("ValueError for values: {0}, {1}, {2}".format(
+            time_now, temperature, humidity))
+        continue
+    else:
+        syslogger.info("Logged '{}' to {}. Sleeping for 1mins".format(OUTPUT, csv_path))
+        csv_logger.info(OUTPUT)
+        time.sleep(60)

@@ -9,6 +9,11 @@ Install via
 	./create_deb.sh
 	sudo gdebi dist/temperature-sensor-pi_1.0.0_all.deb
 
+Also ensure nodejs & npm is installed:
+
+	sudo apt install nodejs npm
+	sudo npm install -g firebase-tools
+
 ## How to run it
 
 Two services are installed as part of the package installation:
