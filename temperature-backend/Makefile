@@ -11,7 +11,7 @@ install: build
 	@echo "=====Install======"
 	sudo gdebi --non-interactive dist/temperature-sensor-pi_$(VERSION)_all.deb 
 
-test:
+run_test:
 	@echo "=====Test======"
 	python3 -m pytest -v test/test_temperature_sensor.py
 

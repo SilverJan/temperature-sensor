@@ -6,22 +6,27 @@ import pytest
 from test_utils.io import *
 from test_utils.systemd import *
 
-temperature_services = [
-    "temperature-gather.service", "temperature-upload.service"]
+temperature_gather_service = "temperature-gather.service"
+temperature_upload_service = "temperature-upload.service"
+
+
+def test_temperature_gather_service_enabled_running():
+    assert is_service_enabled(temperature_gather_service)
+    assert is_service_running(temperature_gather_service)
+
+
+def test_temperature_upload_service_enabled():
+    assert is_service_enabled(temperature_upload_service)
+
 
 @pytest.mark.parametrize(
-    'service', temperature_services)
-def test_services_enabled(service):
-    """Test if services are enabled"""
-    assert is_service_enabled(service)
+    'directory', ["/opt/temperature", "/var/log/temperature"])
+def test_directories_exist(directory):
+    assert is_dir(directory)
+
 
 @pytest.mark.parametrize(
-    'service', temperature_services)
-def test_services_running(service):
-    """Test if services are running"""
-    assert is_service_running(service)
-
-@pytest.mark.parametrize(
-    'file', [""])
-def test_directories_files_exist(file):
+    'file', ["/opt/temperature/temperature-gather.py", "/opt/temperature/temperature-upload.py",
+             "/var/log/temperature/temps.csv", "/var/log/temperature/temps_big.csv", "/var/log/temperature/temps.json"])
+def test_files_exist(file):
     assert is_file(file)
