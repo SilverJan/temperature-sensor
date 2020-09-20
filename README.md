@@ -2,40 +2,18 @@
 
 This is a small application which runs on a Raspberry Pi with connected temperature and humidity sensor.
 
-## How to install package
+It comprises of two components:
 
-Install via
+* `temperature-backend` - Debian package which installs systemd services that run data gathering & upload mechanisms
+* `temperature-frontend` - Angular based frontend for graphical representation of the gathered data
 
-	./create_deb.sh
-	sudo gdebi dist/temperature-sensor-pi_1.0.0_all.deb
-
-Also ensure nodejs & npm is installed:
-
-	sudo apt install nodejs npm
-	sudo npm install -g firebase-tools
-
-## How to run it
-
-Two services are installed as part of the package installation:
-
-* temperature-gather.service -> for gathering of data and appending to csv file, runs every 5 minutes
-* temperature-upload.service -> for uploading of data to Firebase, runs hourly
-
-Log data is created in `/var/log/temperature/`.
-
-## How to debug issues
-
-Run the following commands to get debug information on both services
-
-	sudo systemctl status temperature-gather.service
-	sudo systemctl status temperature-upload.service
-	sudo systemctl list-timers --all # to show next run time
+For more details, check out the README.md's of the particular component.
 
 ## Manage Firebase
 
 If the database is full, and you want to run a backup, follow these steps:
 
-1) SSH on the server
+1) SSH on the Raspberry Pi
 2) Move the existing data to a backup
 
 		cd /var/logs/temperature
