@@ -15,7 +15,7 @@ run_test:
 	@echo "=====Test======"
 	python3 -m pytest -v test/test_temperature_sensor.py
 
-clean_install_test: purge install test
+clean_install_test: purge install run_test
 
 purge:
 	@echo "=====Purge======"
