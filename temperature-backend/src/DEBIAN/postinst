@@ -8,6 +8,8 @@ mkdir -p /var/log/temperature
 systemctl daemon-reload
 systemctl enable temperature-gather.service
 systemctl start temperature-gather.service
+systemctl enable temperature-upload.timer
+systemctl start temperature-upload.timer
 systemctl enable temperature-upload.service
 systemctl start temperature-upload.service
 

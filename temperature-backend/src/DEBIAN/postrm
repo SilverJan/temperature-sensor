@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 
-pip3 uninstall adafruit-circuitpython-dht
+pip3 uninstall -y adafruit-circuitpython-dht
 
 systemctl daemon-reload
 
-rm -rf /var/log/temperature
+# rm -rf /var/log/temperature
 
 exit 0

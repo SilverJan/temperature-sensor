@@ -25,6 +25,7 @@ try:
     # file = open(logPath, "a", buffering=0)
     #   with open(csvPath, mode='a') as csv_file:
     while True:
+        print("Trying to gather data")
         time_now = time.strftime("%Y-%m-%d %H:%M:%S")
         dhtDevice = dht.DHT11(board.D4)
         temperature = dhtDevice.temperature
@@ -41,8 +42,9 @@ try:
                 time_now, temperature, humidity))
             continue
         else:
+            print("Logged '{}' to {}. Sleeping for 1mins".format(OUTPUT, csv_Path))
             logger.info(OUTPUT)
-            time.sleep(300)
+            time.sleep(60)
 
 except KeyboardInterrupt:
     pass
