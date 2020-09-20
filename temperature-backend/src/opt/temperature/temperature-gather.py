@@ -15,7 +15,8 @@ syslogger = get_logger("temperature-gather")
 # log management (use logging module for rotating functionality)
 csv_path = "{}/temps.csv".format(LOG_DIR)
 csv_logger = logging.getLogger(
-    "temperature-gather-csv-logger").setLevel(logging.INFO)
+    "temperature-gather-csv-logger")
+csv_logger.setLevel(logging.INFO)
 handler = TimedRotatingFileHandler(
     csv_path, when="d", interval=1, backupCount=500)
 formatter = logging.Formatter('%(message)s')
@@ -35,24 +36,25 @@ while True:
         temperature = dhtDevice.temperature
         humidity = dhtDevice.humidity
     except RuntimeError as err:
-        syslogger.warning("RuntimeError detected. Continue after a short sleep.")
+        syslogger.warning(
+            "RuntimeError detected. Continue after a short sleep.")
         time.sleep(1)
         continue
 
     # Verify that value is not string (in case of failure)
     if isinstance(humidity, str) or isinstance(temperature, str):
         syslogger.warning(
-            "Error while reading sensor data . Values: {0};{1}".format(temperature, humidity))
+            f"Error while reading sensor data . Values: {temperature};{humidity}")
         continue
 
     try:
-        OUTPUT = "{0},{1:0.1f},{2:0.1f}".format(
-            time_now, temperature, humidity)
+        OUTPUT = f"{time_now},{temperature:0.1f},{humidity:0.1f}"
     except ValueError:
-        syslogger.warning("ValueError for values: {0}, {1}, {2}".format(
-            time_now, temperature, humidity))
+        syslogger.warning(
+            f"ValueError for values: {time_now}, {temperature}, {humidity}")
         continue
     else:
-        syslogger.info("Logged '{}' to {}. Sleeping for 1mins".format(OUTPUT, csv_path))
+        syslogger.info(
+            f"Logged '{OUTPUT}' to {csv_path}. Sleeping for 1mins")
         csv_logger.info(OUTPUT)
         time.sleep(60)

@@ -16,14 +16,15 @@ for file in os.listdir(LOG_DIR):
         csv_files.append(file)
 
 # Concatenate all csv files in a big file
-with open(f"{LOG_DIR}/temps_big.csv", 'w') as out_file:
+csv_big_file_path = f"{LOG_DIR}/temps_big.csv"
+with open(csv_big_file_path, 'w') as out_file:
     for f_name in csv_files:
-        with open(f"{LOG_DIR}/f_name") as in_file:
+        with open(f"{LOG_DIR}/{f_name}") as in_file:
             for line in in_file:
                 out_file.write(line)
 
 json_file_path = f"{LOG_DIR}/temps.json"
-csv_file = open(f"{LOG_DIR}/temps_big.csv", 'r')
+csv_file = open(csv_big_file_path, 'r')
 json_file = open(json_file_path, 'w')
 
 # Read concatenated CSV file and convert to JSON
