@@ -52,7 +52,7 @@ for row in reader:
 # has to be done one time & manually
 syslogger.info("trying to upload data to firebase")
 rc = subprocess.call(
-    list(f"sudo firebase --project temperature-sensor-228507 database:set /data {json_file_path} -y".split(" ")))
+    list(f"firebase --project temperature-sensor-228507 database:set /data {json_file_path} -y".split(" ")))
 
 if rc != 0:
     syslogger.error("error while uploading data to firebase")

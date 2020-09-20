@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+# TODO: Find a way to install this via apt/control
 pip3 install adafruit-circuitpython-dht
 
 mkdir -p /var/log/temperature
