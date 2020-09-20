@@ -7,18 +7,17 @@ from logging.handlers import TimedRotatingFileHandler
 import adafruit_dht as dht
 import board
 
-from config import LOG_DIR
+from config import LOG_DIR, CSV_LOG_FILE
 from utils import get_logger
 
 syslogger = get_logger("temperature-gather")
 
 # log management (use logging module for rotating functionality)
-csv_path = "{}/temps.csv".format(LOG_DIR)
 csv_logger = logging.getLogger(
     "temperature-gather-csv-logger")
 csv_logger.setLevel(logging.INFO)
 handler = TimedRotatingFileHandler(
-    csv_path, when="d", interval=1, backupCount=500)
+    CSV_LOG_FILE, when="d", interval=1, backupCount=500)
 formatter = logging.Formatter('%(message)s')
 handler.setFormatter(formatter)
 csv_logger.addHandler(handler)
@@ -44,7 +43,7 @@ while True:
     # Verify that value is not string (in case of failure)
     if isinstance(humidity, str) or isinstance(temperature, str):
         syslogger.warning(
-            f"Error while reading sensor data . Values: {temperature};{humidity}")
+            f"Error while reading sensor data. Values: {temperature};{humidity}")
         continue
 
     try:
@@ -56,6 +55,6 @@ while True:
         continue
     else:
         syslogger.info(
-            f"Logged '{OUTPUT}' to {csv_path}. Sleeping for 1mins")
+            f"Logged '{OUTPUT}' to {CSV_LOG_FILE}. Sleeping for 5mins")
         csv_logger.info(OUTPUT)
-        time.sleep(60)
+        time.sleep(300)
