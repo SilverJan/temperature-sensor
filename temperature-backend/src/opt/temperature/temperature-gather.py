@@ -48,7 +48,8 @@ while True:
         continue
 
     try:
-        OUTPUT = f"{time_now},{temperature:0.1f},{humidity:0.1f}"
+        OUTPUT = "{0},{1:0.1f},{2:0.1f}".format(
+            time_now, temperature, humidity)
     except ValueError:
         syslogger.warning(
             f"ValueError for values: {time_now}, {temperature}, {humidity}")
