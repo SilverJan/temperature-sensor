@@ -75,14 +75,10 @@ GIT_COMMIT_SHA=$(git rev-parse --short HEAD)
 
 # prepare result folder
 DIST_SRC_DIR="dist_src"
-if [ -f Makefile ]; then
-    make prepare_package DESTDIR=$DIST_SRC_DIR
-else
-    rm -rf "$DIST_DIR" "$DIST_SRC_DIR"
-    mkdir -p "$DIST_DIR" "$DIST_SRC_DIR"
-    # create source copy
-    cp -rfp $SRC_DIR/* "$DIST_SRC_DIR"
-fi
+rm -rf "$DIST_DIR" "$DIST_SRC_DIR"
+mkdir -p "$DIST_DIR" "$DIST_SRC_DIR"
+# create source copy
+cp -rfp $SRC_DIR/* "$DIST_SRC_DIR"
 
 # replaces all wildcards in src/
 for file in $(find $DIST_SRC_DIR -type f); do
