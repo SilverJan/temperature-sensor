@@ -23,7 +23,8 @@ Source: https://tutorials-raspberrypi.com/raspberry-pi-measure-humidity-temperat
 1) Create a Firebase project according to https://firebase.google.com/docs/web/setup
 2) Create a Realtime Database
 3) Set the rules to:
-```
+
+``` 
 {
   "rules": {
     "data": {
@@ -33,6 +34,7 @@ Source: https://tutorials-raspberrypi.com/raspberry-pi-measure-humidity-temperat
   }
 }
 ```
+
 4) Modify the `FIREBASE_PROJECT_ID` variable in the `config.py` file where the endpoint to Firebase is configured
 
 ## How to install & setup the package
@@ -60,7 +62,7 @@ And, install firebase-tools and login there with your Firebase-linked account:
 Two services are installed as part of the package installation:
 
 * `temperature-gather.service` -> for gathering of data and appending to csv file, runs every 5 minutes
-* `temperature-upload.service` -> for uploading of data to Firebase, runs every 15 minutes (via `temperature-upload.timer`)
+* `temperature-upload.service` -> for uploading of data to Firebase, runs every 15 minutes (via `temperature-upload.timer` )
 
 Log data is created in `/var/log/temperature/`
 
@@ -78,7 +80,24 @@ After installation, run the following pytest for integration tests
 
     make run_tests
 
-# TODOs
+## Manage Firebase
+
+If the database is full, and you want to run a backup, follow these steps:
+
+1) SSH on the Raspberry Pi
+2) Move the existing data to a backup
+
+		cd /var/logs/temperature
+		mv temps.json temps_01-21_until_05-27.json
+		mv temps_big.csv temps_big_01-21_until_05-27.csv
+
+3) Remove all existing data from the Firebase database
+
+		sudo firebase --project temperature-sensor-228507 database:remove /data/*
+
+Now the database is empty again and can be refilled
+
+## TODOs
 
 * [x] add more tests (e.g. if upload successful, data is created etc)
 * [x] add more documentation for setup
