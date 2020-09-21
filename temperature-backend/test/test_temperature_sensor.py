@@ -4,6 +4,7 @@
 
 import pytest
 import os
+import re
 from test_utils.io import *
 from test_utils.systemd import *
 from test_utils.shell import *
@@ -18,6 +19,14 @@ def test_temperature_gather_service_enabled_running():
     assert is_service_running(temperature_gather_service)
 
 
+def test_temperature_gather_service_creates_data():
+    (rc, output) = run_in_shell(
+        f"systemctl status {temperature_gather_service}")
+    output_concatendated = "".join(output)
+    assert re.match(r"(.*)(Logged ')(.*)(' to /var/log/temperature/*)(.*)",
+                    output_concatendated), "Data gathering seems to have problems!"
+
+
 def test_temperature_upload_service_enabled():
     assert is_service_enabled(temperature_upload_service)
 
@@ -25,10 +34,13 @@ def test_temperature_upload_service_enabled():
 def test_temperature_upload_timer_enabled():
     assert is_service_enabled(temperature_upload_timer)
 
+
 def test_temperature_upload_service_does_not_fail():
-    (rc, output) = run_in_shell(f"systemctl status {temperature_upload_service}")
-    assert "successfully uploaded data to firebase" in output
-    assert "Data persisted successfully" in output
+    (rc, output) = run_in_shell(
+        f"systemctl status {temperature_upload_service}")
+    output_concatendated = "".join(output)
+    assert "successfully uploaded data to firebase" in output_concatendated, "Upload to firebase seems to have failed!"
+    assert "Data persisted successfully" in output_concatendated, "Upload to firebase seems to have failed!"
 
 @pytest.mark.parametrize(
     'directory', ["/opt/temperature", "/var/log/temperature"])

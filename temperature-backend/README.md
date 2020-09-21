@@ -48,7 +48,7 @@ After installation, run the following pytest for integration tests
 
 # TODOs
 
-* [] add more tests (e.g. if upload successful, data is created etc)
+* [x] add more tests (e.g. if upload successful, data is created etc)
 * [] add more documentation for setup
 * [] fix venv for development on Ubuntu laptop
 * [] improve Python code
