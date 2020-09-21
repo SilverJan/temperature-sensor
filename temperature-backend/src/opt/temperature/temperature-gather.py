@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-# Source: http://www.circuitbasics.com/how-to-set-up-the-dht11-humidity-sensor-on-the-raspberry-pi/
-# Source: https://github.com/adafruit/Adafruit_Python_DHT/blob/master/examples/AdafruitDHT.py
+
 import logging
 import time
 from logging.handlers import TimedRotatingFileHandler
