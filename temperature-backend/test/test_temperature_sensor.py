@@ -27,7 +27,6 @@ def test_temperature_upload_timer_enabled():
 
 def test_temperature_upload_service_does_not_fail():
     (rc, output) = run_in_shell(f"systemctl status {temperature_upload_service}")
-    assert rc == 0
     assert "successfully uploaded data to firebase" in output
     assert "Data persisted successfully" in output
 
