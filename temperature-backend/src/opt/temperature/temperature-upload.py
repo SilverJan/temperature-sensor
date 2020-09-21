@@ -4,7 +4,7 @@ import csv
 import json
 import os
 import subprocess
-from config import LOG_DIR
+from config import LOG_DIR, FIREBASE_PROJECT_ID
 from utils import get_logger
 
 syslogger = get_logger("temperature-upload")
@@ -55,7 +55,7 @@ csv_file.close()
 # has to be done one time & manually
 syslogger.info("trying to upload data to firebase")
 rc = subprocess.call(
-    f"firebase --project temperature-sensor-228507 database:set /data {json_file_path} -y", shell=True)
+    f"firebase --project {FIREBASE_PROJECT_ID} database:set /data {json_file_path} -y", shell=True)
 
 if rc != 0:
     syslogger.error("error while uploading data to firebase")
