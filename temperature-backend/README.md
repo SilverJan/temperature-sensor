@@ -27,10 +27,10 @@ Also ensure nodejs & npm is installed:
 
 Two services are installed as part of the package installation:
 
-* temperature-gather.service -> for gathering of data and appending to csv file, runs every 5 minutes
-* temperature-upload.service -> for uploading of data to Firebase, runs hourly
+* `temperature-gather.service` -> for gathering of data and appending to csv file, runs every 5 minutes
+* `temperature-upload.service` -> for uploading of data to Firebase, runs every 15 minutes (via `temperature-upload.timer`)
 
-Log data is created in `/var/log/temperature/` .
+Log data is created in `/var/log/temperature/`.
 
 ## How to debug issues
 
