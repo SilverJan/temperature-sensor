@@ -4,7 +4,7 @@ VERSION			?= $(shell cat VERSION)
 
 build: clean
 	@echo "=====Build======"
-	git pull
+	# git pull
 	./create_deb.sh
 
 install: build

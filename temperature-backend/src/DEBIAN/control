@@ -4,7 +4,7 @@ Section: base
 Priority: optional
 Architecture: all
 Essential: no
-Depends: python3, python3-pip, libgpiod2, nodejs, npm
+Depends: libgpiod2
 Installed-Size: 1000
 Maintainer: Jan Bissinger
 Description: Temperature & humidity gathering and Firebase upload tool
